@@ -106,8 +106,8 @@ function webofwow_ai_generator_page() {
     ?>
     <div class="wrap">
         <h1>AI Post Generator</h1>
-        <p>Enter a topic or keyword to generate a test post. The actual AI integration will be added later.</p>
-        
+        <p>Enter a topic or keyword to generate a new post using the OpenAI API.</p>
+
         <form method="post" action="">
             <?php wp_nonce_field('webofwow_ai_generator_nonce'); ?>
             <table class="form-table">
@@ -116,7 +116,7 @@ function webofwow_ai_generator_page() {
                     <td><input type="text" id="webofwow_topic" name="webofwow_topic" value="" style="width: 100%;"/></td>
                 </tr>
             </table>
-            <?php submit_button('Generate Test Post'); ?>
+            <?php submit_button('Generate Post'); ?>
         </form>
     </div>
     <?php
