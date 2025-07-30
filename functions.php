@@ -54,6 +54,7 @@ function webofwow_ai_settings_page_callback() {
 // Register settings, section, and fields.
 function webofwow_register_ai_settings() {
     register_setting('webofwow_ai_settings_group', 'webofwow_openai_api_key');
+    register_setting('webofwow_ai_settings_group', 'webofwow_rss_feed_urls');
 
     add_settings_section(
         'webofwow_api_settings_section',
@@ -69,6 +70,21 @@ function webofwow_register_ai_settings() {
         'webofwow-ai-settings',
         'webofwow_api_settings_section'
     );
+
+    add_settings_section(
+        'webofwow_rss_settings_section',
+        'RSS Feed Settings',
+        null,
+        'webofwow-ai-generator-settings'
+    );
+
+    add_settings_field(
+        'webofwow_rss_feed_urls',
+        'RSS Feed URLs',
+        'webofwow_rss_feed_urls_callback',
+        'webofwow-ai-generator-settings',
+        'webofwow_rss_settings_section'
+    );
 }
 add_action('admin_init', 'webofwow_register_ai_settings');
 
@@ -76,6 +92,13 @@ add_action('admin_init', 'webofwow_register_ai_settings');
 function webofwow_api_key_field_callback() {
     $api_key = get_option('webofwow_openai_api_key');
     echo '<input type="text" name="webofwow_openai_api_key" value="' . esc_attr($api_key) . '" size="50" />';
+}
+
+// Callback for the RSS feed URLs field.
+function webofwow_rss_feed_urls_callback() {
+    $rss_urls = get_option('webofwow_rss_feed_urls');
+    echo "<textarea name='webofwow_rss_feed_urls' rows='5' cols='50' class='large-text code'>" . esc_textarea($rss_urls) . "</textarea>";
+    echo "<p class='description'>Enter one RSS feed URL per line.</p>";
 }
 
 // Callback function for the AI Post Generator page.
@@ -118,6 +141,38 @@ function webofwow_ai_generator_page() {
             </table>
             <?php submit_button('Generate Post'); ?>
         </form>
+
+        <hr>
+
+        <h2>Latest from RSS Feeds</h2>
+        <?php
+        $feed_items = webofwow_fetch_rss_feeds();
+        if (!empty($feed_items)) {
+            echo '<ul>';
+            foreach ($feed_items as $item) {
+                echo '<li>';
+                echo '<strong>' . esc_html($item['title']) . '</strong> - <em>' . esc_html($item['source']) . '</em>';
+                echo ' <a href="#" class="use-topic" data-topic="' . esc_attr($item['title']) . '">Use as Topic</a>';
+                echo '</li>';
+            }
+            echo '</ul>';
+        } else {
+            echo '<p>No RSS feeds configured or could not fetch items.</p>';
+        }
+        ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const topicInput = document.getElementById('webofwow_topic');
+                const useTopicLinks = document.querySelectorAll('.use-topic');
+
+                useTopicLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        topicInput.value = this.dataset.topic;
+                    });
+                });
+            });
+        </script>
     </div>
     <?php
 }

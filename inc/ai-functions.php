@@ -59,3 +59,48 @@ function webofwow_generate_ai_content($topic) {
         return 'Error: Could not retrieve content from API response.';
     }
 }
+
+/**
+ * Fetches and parses RSS feeds.
+ *
+ * @return array An array of fetched feed items.
+ */
+function webofwow_fetch_rss_feeds() {
+    include_once(ABSPATH . WPINC . '/feed.php');
+
+    $rss_urls_string = get_option('webofwow_rss_feed_urls');
+    if (empty($rss_urls_string)) {
+        return [];
+    }
+
+    $rss_urls = explode("\n", trim($rss_urls_string));
+    $rss_urls = array_map('trim', $rss_urls);
+    $rss_urls = array_filter($rss_urls);
+
+    if (empty($rss_urls)) {
+        return [];
+    }
+
+    $feed_items = [];
+    foreach ($rss_urls as $url) {
+        $feed = fetch_feed($url);
+
+        if (!is_wp_error($feed)) {
+            $maxitems = $feed->get_item_quantity(5); // Get the 5 latest items.
+            $rss_items = $feed->get_items(0, $maxitems);
+
+            foreach ($rss_items as $item) {
+                $feed_items[] = [
+                    'title' => $item->get_title(),
+                    'url'   => $item->get_permalink(),
+                    'source' => $feed->get_title(),
+                ];
+            }
+        } else {
+            // Optionally, log the error for debugging.
+            error_log('Error fetching feed from ' . $url . ': ' . $feed->get_error_message());
+        }
+    }
+
+    return $feed_items;
+}
