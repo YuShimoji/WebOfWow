@@ -7,6 +7,7 @@ add_action( 'wp_enqueue_scripts', 'webofwow_enqueue_styles' );
 
 // Include AI functions.
 require_once get_template_directory() . '/inc/ai-functions.php';
+require_once get_template_directory() . '/inc/linking-functions.php';
 
 // Add AI Post Generator menu to the admin dashboard.
 function webofwow_ai_post_generator_menu() {
