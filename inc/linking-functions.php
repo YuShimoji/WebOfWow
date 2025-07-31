@@ -16,6 +16,12 @@ if (!defined('ABSPATH')) {
  * @param WP_Post $post    The post object.
  */
 function webofwow_auto_link_posts($post_id, $post) {
+    // Check if auto-linking is enabled.
+    $is_enabled = get_option('webofwow_auto_linking_enabled');
+    if (!$is_enabled) {
+        return;
+    }
+
     // Check if this is an auto-save, or if the post type is not 'post', or if the post is not being published.
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;

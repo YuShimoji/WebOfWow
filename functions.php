@@ -56,6 +56,7 @@ function webofwow_ai_settings_page_callback() {
 function webofwow_register_ai_settings() {
     register_setting('webofwow_ai_settings_group', 'webofwow_openai_api_key');
     register_setting('webofwow_ai_settings_group', 'webofwow_rss_feed_urls');
+    register_setting('webofwow_ai_settings_group', 'webofwow_auto_linking_enabled');
 
     add_settings_section(
         'webofwow_api_settings_section',
@@ -86,6 +87,21 @@ function webofwow_register_ai_settings() {
         'webofwow-ai-generator-settings',
         'webofwow_rss_settings_section'
     );
+
+    add_settings_section(
+        'webofwow_auto_linking_section',
+        'Auto-linking Settings',
+        null,
+        'webofwow-ai-generator-settings'
+    );
+
+    add_settings_field(
+        'webofwow_auto_linking_enabled',
+        'Enable Auto-linking',
+        'webofwow_auto_linking_enabled_callback',
+        'webofwow-ai-generator-settings',
+        'webofwow_auto_linking_section'
+    );
 }
 add_action('admin_init', 'webofwow_register_ai_settings');
 
@@ -100,6 +116,13 @@ function webofwow_rss_feed_urls_callback() {
     $rss_urls = get_option('webofwow_rss_feed_urls');
     echo "<textarea name='webofwow_rss_feed_urls' rows='5' cols='50' class='large-text code'>" . esc_textarea($rss_urls) . "</textarea>";
     echo "<p class='description'>Enter one RSS feed URL per line.</p>";
+}
+
+// Callback for the auto-linking checkbox.
+function webofwow_auto_linking_enabled_callback() {
+    $checked = get_option('webofwow_auto_linking_enabled');
+    echo "<input type='checkbox' name='webofwow_auto_linking_enabled' value='1' " . checked(1, $checked, false) . " />";
+    echo "<p class='description'>Enable this to automatically create links between posts.</p>";
 }
 
 // Callback function for the AI Post Generator page.
