@@ -17,3 +17,4 @@
 - Added a settings page under "AI Post Generator" to save the OpenAI API key.
 - Implemented RSS feed fetching functionality to gather topics from external sites.
 - Displayed fetched RSS feed items on the AI Post Generator page, allowing users to select them as topics.
+- Implemented an auto-linking feature that automatically creates links between posts based on their titles when a post is published or updated.

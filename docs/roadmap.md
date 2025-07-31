@@ -18,5 +18,5 @@ This document outlines the development roadmap for the WebOfWow theme.
 
 ## Phase 3: Advanced Features
 
-- **[To Do]** **Inter-Article Linking:** Automatically suggest and create links between related articles on the site.
+- **[Done]** **Inter-Article Linking:** Automatically creates links between related articles on the site based on post titles.
 - **[To Do]** **User Recommendation Engine:** Develop a system to recommend articles to users based on their reading history.
